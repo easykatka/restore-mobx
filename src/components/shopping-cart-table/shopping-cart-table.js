@@ -1,12 +1,15 @@
 import './shopping-cart-table.scss'
-import store from '../../services/storage/store'
+import store from '../../services/store'
 import { observer } from 'mobx-react'
-export const ShoppingCartTable = observer(({ onInc, onDec, onDelete }) => {
+import { Link } from 'react-router-dom'
+export const ShoppingCartTable = observer(() => {
+	console.log(store.cartItems)
+
 	const renderRow = (item, idx) => {
 		const { id, name, count, total } = item;
 		return (
 			<tr key={id}>
-				<td>{idx+1}</td>
+				<td>{idx + 1}</td>
 				<td>{name}</td>
 				<td>{count}</td>
 				<td>{total}</td>
@@ -38,15 +41,14 @@ export const ShoppingCartTable = observer(({ onInc, onDec, onDelete }) => {
 				</thead>
 				<tbody>
 					{
-						store.cartItems.map(renderRow)
+						store.cartItems && store.cartItems.map(renderRow)
 					}
-
 				</tbody>
 			</table>
 			<div className='total'>
 				total: ${store.total}
-
 			</div>
+			<Link to='/'>back to shop</Link>
 		</div>
 	)
 })
