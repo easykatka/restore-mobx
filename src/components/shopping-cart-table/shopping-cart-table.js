@@ -1,42 +1,52 @@
 import './shopping-cart-table.scss'
-
-export const ShoppingCartTable = () => {
+import store from '../../services/storage/store'
+import { observer } from 'mobx-react'
+export const ShoppingCartTable = observer(({ onInc, onDec, onDelete }) => {
+	const renderRow = (item, idx) => {
+		const { id, name, count, total } = item;
+		return (
+			<tr key={id}>
+				<td>{idx+1}</td>
+				<td>{name}</td>
+				<td>{count}</td>
+				<td>{total}</td>
+				<td>
+					<button className='btn btn-danger' onClick={() => store.onDelete(id)}>
+						<i className='fa fa-trash-o' />
+					</button>
+					<button className='btn btn-success' onClick={() => store.onInc(id)}>
+						<i className='fa fa-plus-circle' />
+					</button>
+					<button className='btn btn-dark' onClick={() => store.onDec(id)}>
+						<i className='fa fa-minus-circle' />
+					</button>
+				</td>
+			</tr>)
+	}
 	return (
 		<div className='shopping-cart-table'>
 			<h2>Your order </h2>
-
 			<table className='table'>
 				<thead>
-					<th>#</th>
-					<th>Item</th>
-					<th>Count</th>
-					<th>Price</th>
-					<th>Action</th>
+					<tr>
+						<th>#</th>
+						<th>Item</th>
+						<th>Count</th>
+						<th>Price</th>
+						<th>Action</th>
+					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>1</td>
-						<td>Site Reliability Enginenering</td>
-						<td>2</td>
-						<td>40$</td>
-						<td>
-							<button className='btn btn-danger'>
-								<i className='fa fa-trash-o' />
-							</button>
-							<button className='btn btn-success'>
-								<i className='fa fa-plus-circle' />
-							</button>
-							<button className='btn btn-dark'>
-								<i className='fa fa-minus-circle' />
-							</button>
-						</td>
-					</tr>
+					{
+						store.cartItems.map(renderRow)
+					}
+
 				</tbody>
 			</table>
 			<div className='total'>
-				total: $201
+				total: ${store.total}
 
 			</div>
 		</div>
 	)
-}
+})
